@@ -1,0 +1,27 @@
+{
+    "name": "bookr_com/e-bookr_client",
+    "description": "Base structure for clients",
+    "type": "library",
+    "authors": [
+        {
+            "name": "Claudio Pinto",
+            "email": "me@cfpinto.com"
+        }
+    ],
+    "require": {
+        "php": ">=7.1.0",
+        "ext-json": "*",
+        "laravel/framework": "~5.5",
+        "tcg/voyager": "^1.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "Ebookr\\Client\\": "src/"
+        },
+        "files": [
+            "src/helpers.php"
+        ]
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
