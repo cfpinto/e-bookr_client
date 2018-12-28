@@ -6,10 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 use TCG\Voyager\Traits\Translatable;
 
 /**
- * Class Location
+ * Ebookr\Client\Models\Location
  *
- * @property-read array $image_list
- * @package App
  * @property int $id
  * @property int|null $address_id
  * @property string $name
@@ -22,24 +20,25 @@ use TCG\Voyager\Traits\Translatable;
  * @property \Carbon\Carbon|null $updated_at
  * @property string $color
  * @property string|null $deleted_at
+ * @property-read mixed $image_list
  * @property-read null $translated
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Review[] $reviews
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Room[] $rooms
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Ebookr\Client\Models\Review[] $reviews
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Ebookr\Client\Models\Room[] $rooms
  * @property-read \Illuminate\Database\Eloquent\Collection|\TCG\Voyager\Models\Translation[] $translations
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Location whereAddressId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Location whereColor($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Location whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Location whereDeletedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Location whereDescription($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Location whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Location whereImage($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Location whereImages($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Location whereMetaDescription($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Location whereMetaKeywords($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Location whereName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Location whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Location withTranslation($locale = null, $fallback = true)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Location withTranslations($locales = null, $fallback = true)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Ebookr\Client\Models\Location whereAddressId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Ebookr\Client\Models\Location whereColor($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Ebookr\Client\Models\Location whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Ebookr\Client\Models\Location whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Ebookr\Client\Models\Location whereDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Ebookr\Client\Models\Location whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Ebookr\Client\Models\Location whereImage($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Ebookr\Client\Models\Location whereImages($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Ebookr\Client\Models\Location whereMetaDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Ebookr\Client\Models\Location whereMetaKeywords($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Ebookr\Client\Models\Location whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Ebookr\Client\Models\Location whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Ebookr\Client\Models\Location withTranslation($locale = null, $fallback = true)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Ebookr\Client\Models\Location withTranslations($locales = null, $fallback = true)
  * @mixin \Eloquent
  */
 class Location extends Model

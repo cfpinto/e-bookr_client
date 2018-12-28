@@ -7,45 +7,47 @@ use TCG\Voyager\Traits\Resizable;
 use TCG\Voyager\Traits\Translatable;
 
 /**
- * App\Page
+ * Ebookr\Client\Models\Page
  *
- * @property int                 $id
- * @property int                 $author_id
- * @property string              $title
- * @property string|null         $excerpt
- * @property string|null         $body
- * @property string|null         $image
- * @property string              $slug
- * @property string|null         $meta_description
- * @property string|null         $meta_keywords
- * @property string              $status
+ * @property int $id
+ * @property string|null $page_id
+ * @property int $author_id
+ * @property int $location_id
+ * @property string $title
+ * @property string|null $excerpt
+ * @property string|null $body
+ * @property string|null $image
+ * @property string $slug
+ * @property string|null $meta_description
+ * @property string|null $meta_keywords
+ * @property string $status
  * @property \Carbon\Carbon|null $created_at
  * @property \Carbon\Carbon|null $updated_at
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Page whereAuthorId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Page whereBody($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Page whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Page whereExcerpt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Page whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Page whereImage($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Page whereMetaDescription($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Page whereMetaKeywords($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Page whereSlug($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Page whereStatus($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Page whereTitle($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Page whereUpdatedAt($value)
- * @mixin \Eloquent
- * @property string|null $page_id
  * @property-read mixed $image_gallery_url
  * @property-read mixed $image_hero_url
  * @property-read mixed $image_list_url
  * @property-read mixed $image_url
  * @property-read null $translated
- * @property-read \App\Page|null $page
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Page[] $pages
+ * @property-read \Ebookr\Client\Models\Page|null $page
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Ebookr\Client\Models\Page[] $pages
  * @property-read \Illuminate\Database\Eloquent\Collection|\TCG\Voyager\Models\Translation[] $translations
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Page wherePageId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Page withTranslation($locale = null, $fallback = true)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Page withTranslations($locales = null, $fallback = true)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Ebookr\Client\Models\Page whereAuthorId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Ebookr\Client\Models\Page whereBody($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Ebookr\Client\Models\Page whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Ebookr\Client\Models\Page whereExcerpt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Ebookr\Client\Models\Page whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Ebookr\Client\Models\Page whereImage($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Ebookr\Client\Models\Page whereLocationId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Ebookr\Client\Models\Page whereMetaDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Ebookr\Client\Models\Page whereMetaKeywords($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Ebookr\Client\Models\Page wherePageId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Ebookr\Client\Models\Page whereSlug($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Ebookr\Client\Models\Page whereStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Ebookr\Client\Models\Page whereTitle($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Ebookr\Client\Models\Page whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Ebookr\Client\Models\Page withTranslation($locale = null, $fallback = true)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Ebookr\Client\Models\Page withTranslations($locales = null, $fallback = true)
+ * @mixin \Eloquent
  */
 class Page extends Model
 {

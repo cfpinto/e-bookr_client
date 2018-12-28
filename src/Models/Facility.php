@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use TCG\Voyager\Traits\Translatable;
 
 /**
- * App\Facility
+ * Ebookr\Client\Models\Facility
  *
  * @property int $id
  * @property string $name
@@ -17,15 +17,15 @@ use TCG\Voyager\Traits\Translatable;
  * @property string|null $deleted_at
  * @property-read null $translated
  * @property-read \Illuminate\Database\Eloquent\Collection|\TCG\Voyager\Models\Translation[] $translations
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Facility whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Facility whereDeletedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Facility whereDescription($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Facility whereIcon($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Facility whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Facility whereName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Facility whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Facility withTranslation($locale = null, $fallback = true)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Facility withTranslations($locales = null, $fallback = true)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Ebookr\Client\Models\Facility whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Ebookr\Client\Models\Facility whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Ebookr\Client\Models\Facility whereDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Ebookr\Client\Models\Facility whereIcon($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Ebookr\Client\Models\Facility whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Ebookr\Client\Models\Facility whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Ebookr\Client\Models\Facility whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Ebookr\Client\Models\Facility withTranslation($locale = null, $fallback = true)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Ebookr\Client\Models\Facility withTranslations($locales = null, $fallback = true)
  * @mixin \Eloquent
  */
 class Facility extends Model

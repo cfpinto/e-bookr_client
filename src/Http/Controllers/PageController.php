@@ -2,7 +2,7 @@
 
 namespace Ebookr\Client\Http\Controllers;
 
-use App\Http\Middleware\Locale;
+use Ebookr\Client\Http\Middleware\Locale;
 use Ebookr\Client\Models\Page;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;

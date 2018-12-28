@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use TCG\Voyager\Traits\Translatable;
 
 /**
- * App\Amenity
+ * Ebookr\Client\Models\Amenity
  *
  * @property int $id
  * @property string $name
@@ -17,15 +17,15 @@ use TCG\Voyager\Traits\Translatable;
  * @property string|null $deleted_at
  * @property-read null $translated
  * @property-read \Illuminate\Database\Eloquent\Collection|\TCG\Voyager\Models\Translation[] $translations
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Amenity whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Amenity whereDeletedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Amenity whereDescription($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Amenity whereIcon($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Amenity whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Amenity whereName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Amenity whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Amenity withTranslation($locale = null, $fallback = true)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Amenity withTranslations($locales = null, $fallback = true)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Ebookr\Client\Models\Amenity whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Ebookr\Client\Models\Amenity whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Ebookr\Client\Models\Amenity whereDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Ebookr\Client\Models\Amenity whereIcon($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Ebookr\Client\Models\Amenity whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Ebookr\Client\Models\Amenity whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Ebookr\Client\Models\Amenity whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Ebookr\Client\Models\Amenity withTranslation($locale = null, $fallback = true)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Ebookr\Client\Models\Amenity withTranslations($locales = null, $fallback = true)
  * @mixin \Eloquent
  */
 class Amenity extends Model
