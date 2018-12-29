@@ -31,7 +31,7 @@ class PageController extends Controller
             return abort(404);
         }
 
-        return view(\View::exists('pages.' . $page->slug) ? 'pages.' . $page->slug : 'pages.show')
+        return view(\View::exists('pages.' . $page->slug) ? 'pages.' . $page->slug : 'e-bookr::pages.show')
             ->with('canonical', url($slug . '.html'))
             ->with('pageName', ucfirst(str_replace('index', 'home', $slug)))
             ->with('page', $page);

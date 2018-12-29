@@ -16,10 +16,11 @@ class ClientProvider extends ServiceProvider
     {
         $this->publishes(
             [
-            __DIR__ . '/../Config/e-bookr.php' => config_path('e-bookr.php')
+            __DIR__ . '/../../config/e-bookr.php' => config_path('e-bookr.php')
             ]
         );
-        $this->loadRoutesFrom(__DIR__ . '/../Routes/web.php');
+        $this->loadRoutesFrom(__DIR__ . '/../../routes/web.php');
+        $this->loadViewsFrom(__DIR__ . '/../../views', 'e-bookr');
     }
 
     public function register()

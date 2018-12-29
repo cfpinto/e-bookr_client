@@ -20,7 +20,8 @@ use TCG\Voyager\Traits\Translatable;
  * @property \Carbon\Carbon|null $updated_at
  * @property string $color
  * @property string|null $deleted_at
- * @property-read mixed $image_list
+ * @property-read array $image_list
+ * @property-read string $image_url
  * @property-read null $translated
  * @property-read \Illuminate\Database\Eloquent\Collection|\Ebookr\Client\Models\Review[] $reviews
  * @property-read \Illuminate\Database\Eloquent\Collection|\Ebookr\Client\Models\Room[] $rooms
@@ -56,7 +57,10 @@ class Location extends Model
     {
         return $this->hasMany(Review::class)->where('is_approved', '=', true);
     }
-    
+
+    /**
+     * @return array
+     */
     public function getImageListAttribute()
     {
         $list = json_decode($this->images);
@@ -66,6 +70,14 @@ class Location extends Model
         }
         
         return $list;
+    }
+
+    /**
+     * @return string
+     */
+    public function getImageUrlAttribute()
+    {
+        return env('CDN_URL_SECURE') . '/storage/' . $this->image;
     }
     
     public function getImage($idx = null)

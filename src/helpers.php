@@ -20,7 +20,24 @@ if (!function_exists('location')) {
         if (empty($location)) {
             $location = \Ebookr\Client\Models\Location::find(config('e-bookr.location_id'));
         }
+
         return $location;
+    }
+}
+
+if (!function_exists('other_locations')) {
+    /**
+     * @return \Ebookr\Client\Models\Location[]
+     */
+    function other_locations()
+    {
+        static $locations;
+
+        if (empty($locations)) {
+            $locations = \Ebookr\Client\Models\Location::where('id', '<>', config('e-bookr.location_id'))->get();
+        }
+
+        return $locations;
     }
 }
 
@@ -32,11 +49,12 @@ if (!function_exists('contact')) {
      */
     function contact($id)
     {
-        static $contact;
+        static $contact = [];
 
-        if (empty($contact)) {
-            $contact = \Ebookr\Client\Models\Contact::find($id);
+        if (empty($contact[$id])) {
+            $contact[$id] = \Ebookr\Client\Models\Contact::find($id);
         }
-        return $contact;
+
+        return $contact[$id];
     }
 }

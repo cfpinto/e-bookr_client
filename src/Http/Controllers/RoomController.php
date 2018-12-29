@@ -8,13 +8,13 @@ class RoomController extends Controller
 {
     public function index()
     {
-        return view('rooms.index')
+        return view('e-bookr::rooms.index')
             ->with('location', location());
     }
     
     public function show(Room $room)
     {
-        return view('rooms.show')
+        return view('e-bookr::rooms.show')
             ->with('room', $room);
     }
     
