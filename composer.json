@@ -13,7 +13,10 @@
         "ext-json": "*",
         "laravel/framework": "~5.5",
         "tcg/voyager": "^1.1",
-        "barryvdh/laravel-translation-manager": ">=0.5"
+        "barryvdh/laravel-translation-manager": ">=0.5",
+        "laracasts/flash": "^3.0",
+        "laravelcollective/html": "^5.7",
+        "spatie/laravel-googletagmanager": "^2.6"
     },
     "autoload": {
         "psr-4": {
