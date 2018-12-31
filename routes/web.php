@@ -19,5 +19,16 @@ Route::group(
         Route::post('form/contact', 'Ebookr\Client\Http\Controllers\FormController@contact')->name('forms.contact');
         Route::resource('bookings', 'Ebookr\Client\Http\Controllers\BookingController');
         Route::get('{slug}', 'Ebookr\Client\Http\Controllers\PageController@page')->name('pages.show');
+        Route::get(
+            'locale/{locale}',
+            function ($locale) {
+                if (in_array($locale, config('voyager.multilingual.locales'))) {
+                    app()->setLocale($locale);
+                    session()->put(\Ebookr\Client\Http\Middleware\Locale::SESSION_KEY, $locale);
+                }
+
+                return back(302, ['Cache-Control' => 'no-store, no-cache, must-revalidate']);
+            }
+        )->name('locale.set');
     }
 );
