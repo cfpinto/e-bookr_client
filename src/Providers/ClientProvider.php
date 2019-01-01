@@ -8,6 +8,7 @@
 
 namespace Ebookr\Client\Providers;
 
+use Ebookr\Client\Console\FindTranslationCommand;
 use Illuminate\Support\ServiceProvider;
 
 class ClientProvider extends ServiceProvider
@@ -16,11 +17,19 @@ class ClientProvider extends ServiceProvider
     {
         $this->publishes(
             [
-            __DIR__ . '/../../config/e-bookr.php' => config_path('e-bookr.php')
+                __DIR__ . '/../../config/e-bookr.php' => config_path('e-bookr.php')
             ]
         );
         $this->loadRoutesFrom(__DIR__ . '/../../routes/web.php');
         $this->loadViewsFrom(__DIR__ . '/../../views', 'e-bookr');
+
+        if ($this->app->runningInConsole()) {
+            $this->commands(
+                [
+                    FindTranslationCommand::class
+                ]
+            );
+        }
     }
 
     public function register()
