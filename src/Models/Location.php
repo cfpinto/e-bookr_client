@@ -3,6 +3,7 @@
 namespace Ebookr\Client\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use TCG\Voyager\Traits\Translatable;
 
 /**
@@ -44,7 +45,7 @@ use TCG\Voyager\Traits\Translatable;
  */
 class Location extends Model
 {
-    use Translatable;
+    use Translatable, SoftDeletes;
     
     protected $translatable = ['name', 'description', 'meta_description', 'meta_keywords'];
     
