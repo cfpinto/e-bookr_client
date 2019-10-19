@@ -77,7 +77,7 @@ class Location extends Model
      */
     public function getImageUrlAttribute()
     {
-        return env('CDN_URL_SECURE') . '/storage/' . $this->image;
+        return \Storage::disk(config('voyager.storage.disk'))->url($this->image);
     }
     
     public function getImage($idx = null)
@@ -90,6 +90,6 @@ class Location extends Model
             return null;
         }
         
-        return env('CDN_URL_SECURE') . '/storage/' . $this->image_list[$idx];
+        return \Storage::disk(config('voyager.storage.disk'))->url($this->image_list[$idx]);
     }
 }

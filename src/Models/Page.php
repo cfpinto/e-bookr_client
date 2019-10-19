@@ -66,22 +66,22 @@ class Page extends Model
     
     public function getImageUrlAttribute()
     {
-        return env('CDN_URL_SECURE') . '/storage/' . $this->image;
+        return \Storage::disk(config('voyager.storage.disk'))->url($this->image);
     }
 
     public function getImageListUrlAttribute()
     {
-        return env('CDN_URL_SECURE') . '/storage/' . $this->thumbnail('list');
+        return \Storage::disk(config('voyager.storage.disk'))->url(cloud_thumbnail_settings($this->image, 570, 371));
     }
 
     public function getImageGalleryUrlAttribute()
     {
-        return env('CDN_URL_SECURE') . '/storage/' . $this->thumbnail('gallery');
+        return \Storage::disk(config('voyager.storage.disk'))->url(cloud_thumbnail_settings($this->image, 1140, 742));
     }
 
     public function getImageHeroUrlAttribute()
     {
-        return env('CDN_URL_SECURE') . '/storage/' . $this->thumbnail('hero');
+        return \Storage::disk(config('voyager.storage.disk'))->url(cloud_thumbnail_settings($this->image, 2000, 970));
     }
 
 }

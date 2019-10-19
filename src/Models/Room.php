@@ -3,36 +3,37 @@
 namespace Ebookr\Client\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Filesystem\FilesystemAdapter;
 use TCG\Voyager\Traits\Resizable;
 use TCG\Voyager\Traits\Translatable;
 
 /**
  * Ebookr\Client\Models\Room
  *
- * @property int $id
- * @property string $name
- * @property string|null $slug
- * @property string|null $sinopsis
- * @property int $location_id
- * @property string|null $description
- * @property string|null $meta_description
- * @property string|null $meta_keywords
- * @property string|null $image
- * @property string|null $images
- * @property string $status
- * @property \Carbon\Carbon|null $created_at
- * @property \Carbon\Carbon|null $updated_at
- * @property string|null $deleted_at
- * @property-read \Illuminate\Database\Eloquent\Collection|\Ebookr\Client\Models\Amenity[] $amenities
- * @property-read \Illuminate\Database\Eloquent\Collection|\Ebookr\Client\Models\Booking[] $bookings
- * @property-read \Illuminate\Database\Eloquent\Collection|\Ebookr\Client\Models\Facility[] $facilities
- * @property-read mixed $image_gallery_url
- * @property-read mixed $image_list
- * @property-read mixed $image_list_url
- * @property-read mixed $image_url
- * @property-read null $translated
- * @property-read \Ebookr\Client\Models\Location $location
- * @property-read \Illuminate\Database\Eloquent\Collection|\Ebookr\Client\Models\Review[] $reviews
+ * @property int                                                                             $id
+ * @property string                                                                          $name
+ * @property string|null                                                                     $slug
+ * @property string|null                                                                     $sinopsis
+ * @property int                                                                             $location_id
+ * @property string|null                                                                     $description
+ * @property string|null                                                                     $meta_description
+ * @property string|null                                                                     $meta_keywords
+ * @property string|null                                                                     $image
+ * @property string|null                                                                     $images
+ * @property string                                                                          $status
+ * @property \Carbon\Carbon|null                                                             $created_at
+ * @property \Carbon\Carbon|null                                                             $updated_at
+ * @property string|null                                                                     $deleted_at
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Ebookr\Client\Models\Amenity[]   $amenities
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Ebookr\Client\Models\Booking[]   $bookings
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Ebookr\Client\Models\Facility[]  $facilities
+ * @property-read mixed                                                                      $image_gallery_url
+ * @property-read mixed                                                                      $image_list
+ * @property-read mixed                                                                      $image_list_url
+ * @property-read mixed                                                                      $image_url
+ * @property-read null                                                                       $translated
+ * @property-read \Ebookr\Client\Models\Location                                             $location
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Ebookr\Client\Models\Review[]    $reviews
  * @property-read \Illuminate\Database\Eloquent\Collection|\TCG\Voyager\Models\Translation[] $translations
  * @method static \Illuminate\Database\Eloquent\Builder|\Ebookr\Client\Models\Room whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\Ebookr\Client\Models\Room whereDeletedAt($value)
@@ -57,7 +58,7 @@ class Room extends Model
     use Translatable, Resizable;
 
     protected $translatable = ['name', 'description', 'sinopsis', 'meta_description', 'meta_keywords'];
-    
+
     const STATUS_ACTIVE = 'ACTIVE';
     const STATUS_INACTIVE = 'INACTIVE';
     const STATUSES = [
@@ -92,7 +93,7 @@ class Room extends Model
 
     public function getImageUrlAttribute()
     {
-        return env('CDN_URL_SECURE') . '/storage/' . $this->image;
+        return \Storage::disk(config('voyager.storage.disk'))->url($this->image);
     }
 
     public function getImageListAttribute()
@@ -105,13 +106,11 @@ class Room extends Model
 
         return array_map(
             function ($item) {
-                $parts = explode('.', $item);
-                $extension = array_pop($parts);
                 return (object)[
-                    'image' => env('CDN_URL_SECURE') . '/storage/' . $item,
+                    'image'  => \Storage::disk(config('voyager.storage.disk'))->url($item),
                     'thumbs' => (object)[
-                        'gallery' => env('CDN_URL_SECURE') . '/storage/' . implode('.', $parts) . '-gallery.' . $extension,
-                        'gallery' => env('CDN_URL_SECURE') . '/storage/' . implode('.', $parts) . '-list.' . $extension,
+                        'gallery' => \Storage::disk(config('voyager.storage.disk'))->url(cloud_thumbnail_settings($item, 1140, 742)),
+                        'list'    => \Storage::disk(config('voyager.storage.disk'))->url(cloud_thumbnail_settings($item, 570, 371)),
                     ],
                 ];
             }, $list
@@ -120,11 +119,11 @@ class Room extends Model
 
     public function getImageListUrlAttribute()
     {
-        return env('CDN_URL_SECURE') . '/storage/' . $this->thumbnail('list');
+        return \Storage::disk(config('voyager.storage.disk'))->url(cloud_thumbnail_settings($this->image, 570, 371));
     }
 
     public function getImageGalleryUrlAttribute()
     {
-        return env('CDN_URL_SECURE') . '/storage/' . $this->thumbnail('gallery');
+        return \Storage::disk(config('voyager.storage.disk'))->url(cloud_thumbnail_settings($this->image, 1140, 742));
     }
 }
