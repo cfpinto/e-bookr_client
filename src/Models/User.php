@@ -2,6 +2,7 @@
 
 namespace Ebookr\Client\Models;
 
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
 
 /**
@@ -39,7 +40,7 @@ use Illuminate\Notifications\Notifiable;
  */
 class User extends \TCG\Voyager\Models\User
 {
-    use Notifiable;
+    use Notifiable, SoftDeletes;
 
     /**
      * The attributes that are mass assignable.

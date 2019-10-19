@@ -3,6 +3,7 @@
 namespace Ebookr\Client\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use TCG\Voyager\Traits\Resizable;
 use TCG\Voyager\Traits\Translatable;
 
@@ -52,7 +53,7 @@ use TCG\Voyager\Traits\Translatable;
 class Page extends Model
 {
     
-    use Translatable, Resizable;
+    use Translatable, Resizable, SoftDeletes;
 
     public function page()
     {

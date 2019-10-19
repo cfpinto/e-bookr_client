@@ -3,6 +3,7 @@
 namespace Ebookr\Client\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Filesystem\FilesystemAdapter;
 use TCG\Voyager\Traits\Resizable;
 use TCG\Voyager\Traits\Translatable;
@@ -55,7 +56,7 @@ use TCG\Voyager\Traits\Translatable;
  */
 class Room extends Model
 {
-    use Translatable, Resizable;
+    use Translatable, Resizable, SoftDeletes;
 
     protected $translatable = ['name', 'description', 'sinopsis', 'meta_description', 'meta_keywords'];
 
