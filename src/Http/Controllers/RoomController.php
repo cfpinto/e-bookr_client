@@ -20,7 +20,7 @@ class RoomController extends Controller
     
     public function slug(string $slug)
     {
-        $page = Room::where('slug', '=', $slug)->first();
+        $page = Room::where('slug', '=', $slug)->firstOrFail();
         return $this->show($page);
     }
 }
