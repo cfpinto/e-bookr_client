@@ -11,23 +11,7 @@ class PageController extends Controller
     {
         $page = Page::whereSlug($slug)
             ->where('location_id', config('e-bookr.location_id'))
-            ->first();
-
-        //handle 404s
-        if (!$page) {
-            view()->composer(
-                ['layouts.app', 'errors::404'],
-                function ($view) use ($slug) {
-                    $view
-                        ->with('canonical', url($slug . '.html'))
-                        ->with('pageName', ucfirst(str_replace('index', 'home', $slug)))
-                        ->with('page', $slug);
-
-                }
-            );
-
-            return abort(404);
-        }
+            ->firstOrFail();
 
         return view(\View::exists('pages.' . $page->slug) ? 'pages.' . $page->slug : 'e-bookr::pages.show')
             ->with('canonical', url($slug . '.html'))
