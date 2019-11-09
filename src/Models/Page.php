@@ -24,6 +24,7 @@ use TCG\Voyager\Traits\Translatable;
  * @property string $status
  * @property \Carbon\Carbon|null $created_at
  * @property \Carbon\Carbon|null $updated_at
+ * @property string|null $deleted_at
  * @property-read mixed $image_gallery_url
  * @property-read mixed $image_hero_url
  * @property-read mixed $image_list_url
@@ -32,9 +33,13 @@ use TCG\Voyager\Traits\Translatable;
  * @property-read \Ebookr\Client\Models\Page|null $page
  * @property-read \Illuminate\Database\Eloquent\Collection|\Ebookr\Client\Models\Page[] $pages
  * @property-read \Illuminate\Database\Eloquent\Collection|\TCG\Voyager\Models\Translation[] $translations
+ * @method static bool|null forceDelete()
+ * @method static \Illuminate\Database\Query\Builder|\Ebookr\Client\Models\Page onlyTrashed()
+ * @method static bool|null restore()
  * @method static \Illuminate\Database\Eloquent\Builder|\Ebookr\Client\Models\Page whereAuthorId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\Ebookr\Client\Models\Page whereBody($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\Ebookr\Client\Models\Page whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Ebookr\Client\Models\Page whereDeletedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\Ebookr\Client\Models\Page whereExcerpt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\Ebookr\Client\Models\Page whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\Ebookr\Client\Models\Page whereImage($value)
@@ -48,6 +53,8 @@ use TCG\Voyager\Traits\Translatable;
  * @method static \Illuminate\Database\Eloquent\Builder|\Ebookr\Client\Models\Page whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\Ebookr\Client\Models\Page withTranslation($locale = null, $fallback = true)
  * @method static \Illuminate\Database\Eloquent\Builder|\Ebookr\Client\Models\Page withTranslations($locales = null, $fallback = true)
+ * @method static \Illuminate\Database\Query\Builder|\Ebookr\Client\Models\Page withTrashed()
+ * @method static \Illuminate\Database\Query\Builder|\Ebookr\Client\Models\Page withoutTrashed()
  * @mixin \Eloquent
  */
 class Page extends Model

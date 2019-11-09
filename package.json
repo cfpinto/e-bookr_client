@@ -1,0 +1,17 @@
+{
+  "name": "scheduler",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "build": "tsc",
+    "watch-ts": "tsc --watch",
+    "watch-sass": "sass assets/sass/scheduler.scss dist/scheduler.css --watch"
+  },
+  "dependencies": {
+    "@types/node": "^12.12.6",
+    "moment": "^2.24.0",
+    "sass": "^1.23.3",
+    "typescript": "^3.6.4"
+  }
+}

@@ -18,12 +18,15 @@ use Illuminate\Notifications\Notifiable;
  * @property array $settings
  * @property \Carbon\Carbon|null $created_at
  * @property \Carbon\Carbon|null $updated_at
- * @property string $status
+ * @property string|null $status
  * @property string|null $deleted_at
  * @property mixed $locale
  * @property-read \Illuminate\Notifications\DatabaseNotificationCollection|\Illuminate\Notifications\DatabaseNotification[] $notifications
  * @property-read \TCG\Voyager\Models\Role|null $role
  * @property-read \Illuminate\Database\Eloquent\Collection|\TCG\Voyager\Models\Role[] $roles
+ * @method static bool|null forceDelete()
+ * @method static \Illuminate\Database\Query\Builder|\Ebookr\Client\Models\User onlyTrashed()
+ * @method static bool|null restore()
  * @method static \Illuminate\Database\Eloquent\Builder|\Ebookr\Client\Models\User whereAvatar($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\Ebookr\Client\Models\User whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\Ebookr\Client\Models\User whereDeletedAt($value)
@@ -36,6 +39,8 @@ use Illuminate\Notifications\Notifiable;
  * @method static \Illuminate\Database\Eloquent\Builder|\Ebookr\Client\Models\User whereSettings($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\Ebookr\Client\Models\User whereStatus($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\Ebookr\Client\Models\User whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\Ebookr\Client\Models\User withTrashed()
+ * @method static \Illuminate\Database\Query\Builder|\Ebookr\Client\Models\User withoutTrashed()
  * @mixin \Eloquent
  */
 class User extends \TCG\Voyager\Models\User
