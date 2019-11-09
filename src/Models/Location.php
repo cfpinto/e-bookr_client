@@ -13,6 +13,7 @@ use TCG\Voyager\Traits\Translatable;
  * @property int|null $address_id
  * @property string $name
  * @property string|null $description
+ * @property string|null $url
  * @property string|null $meta_description
  * @property string|null $meta_keywords
  * @property string|null $image
@@ -27,6 +28,9 @@ use TCG\Voyager\Traits\Translatable;
  * @property-read \Illuminate\Database\Eloquent\Collection|\Ebookr\Client\Models\Review[] $reviews
  * @property-read \Illuminate\Database\Eloquent\Collection|\Ebookr\Client\Models\Room[] $rooms
  * @property-read \Illuminate\Database\Eloquent\Collection|\TCG\Voyager\Models\Translation[] $translations
+ * @method static bool|null forceDelete()
+ * @method static \Illuminate\Database\Query\Builder|\Ebookr\Client\Models\Location onlyTrashed()
+ * @method static bool|null restore()
  * @method static \Illuminate\Database\Eloquent\Builder|\Ebookr\Client\Models\Location whereAddressId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\Ebookr\Client\Models\Location whereColor($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\Ebookr\Client\Models\Location whereCreatedAt($value)
@@ -39,8 +43,11 @@ use TCG\Voyager\Traits\Translatable;
  * @method static \Illuminate\Database\Eloquent\Builder|\Ebookr\Client\Models\Location whereMetaKeywords($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\Ebookr\Client\Models\Location whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\Ebookr\Client\Models\Location whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Ebookr\Client\Models\Location whereUrl($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\Ebookr\Client\Models\Location withTranslation($locale = null, $fallback = true)
  * @method static \Illuminate\Database\Eloquent\Builder|\Ebookr\Client\Models\Location withTranslations($locales = null, $fallback = true)
+ * @method static \Illuminate\Database\Query\Builder|\Ebookr\Client\Models\Location withTrashed()
+ * @method static \Illuminate\Database\Query\Builder|\Ebookr\Client\Models\Location withoutTrashed()
  * @mixin \Eloquent
  */
 class Location extends Model

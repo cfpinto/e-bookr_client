@@ -1,0 +1,18 @@
+{
+    "compilerOptions": {
+        "module": "amd",
+        "target": "es5",
+        "lib": [ "es2015", "dom" ],
+        "noImplicitAny": false,
+        "sourceMap": true,
+        "outFile": "dist/scheduler.js",
+        "moduleResolution": "node"
+    },
+    "include": [
+        "assets/src/ts/**/*"
+    ],
+    "exclude": [
+        "node_modules",
+        "**/*.spec.ts"
+    ]
+}
