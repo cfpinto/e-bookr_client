@@ -33,8 +33,25 @@ class Rate implements RateInterface {
   price: number;
 }
 
+interface BookingInterface {
+  room?: number;
+  start?: Date;
+  duration?: number;
+  adults?: number;
+  children?: number;
+}
+
+class Booking implements BookingInterface {
+  adults: number = null;
+  children: number = null;
+  duration: number = null;
+  room: number = null;
+  start: Date = null;
+}
+
 interface SchedulerSettingsInterface {
   elem: HTMLElement;
+  pickerForm: HTMLFormElement;
   rooms: Array<RoomInterface>;
   start: Date;
   end: Date;
@@ -44,6 +61,77 @@ interface SchedulerSettingsInterface {
   src?: string,
   target?: string,
 }
+
+class Moment {
+  private readonly date: Date;
+
+  public constructor(date: any) {
+    if (date instanceof Date) {
+      this.date = new Date(date.getTime());
+    } else {
+      this.date = Moment.toDate(date);
+    }
+  }
+
+  public format(): string {
+    const m = this.date.getMonth() + 1;
+    const day = this.date.getDate() > 9 ? this.date.getDate() : '0' + this.date.getDate();
+    const month = m > 9 ? m : '0' + m;
+    return `${day}/${month}/${this.date.getFullYear()}`;
+  }
+
+  public formatToIso(): string {
+    const m = this.date.getMonth() + 1;
+    const day = this.date.getDate() > 9 ? this.date.getDate() : '0' + this.date.getDate();
+    const month = m > 9 ? m : '0' + m;
+    return `${this.date.getFullYear()}-${month}-${day}`;
+  }
+
+  public getDate(): Date {
+    return this.date;
+  }
+
+  public toBeginOfMonth(): Moment {
+    const date = new Date(this.date.getTime());
+    date.setDate(1);
+    return new Moment(date);
+  }
+
+  public toEndOfMonth(): Moment {
+    const date = new Date(this.date);
+    const year = date.getFullYear();
+    const isLeap = ((year % 4 == 0) && (year % 100 != 0)) || (year % 400 == 0)
+    if (date.getMonth() == 1 && isLeap) {
+      date.setDate(29);
+    } else if (date.getMonth() == 1 && !isLeap) {
+      date.setDate(28);
+    } else if ([0, 2, 4, 6, 7, 9, 11].indexOf(date.getMonth())) {
+      date.setDate(31)
+    } else {
+      date.setDate(30)
+    }
+
+    return new Moment(date);
+  }
+
+  static toIsoDateString(dateString: string): string {
+    let test: RegExpMatchArray = dateString.match(/^(\d{2})[\/\-](\d{2})[\/\-](\d{4})(.*)/);
+    if (test) {
+      return `${test[3]}-${test[2]}-${test[1]}${test[4]}`;
+    }
+
+    //Assume ISO if no match
+    return dateString;
+  }
+
+  static toDate(dateString: string): Date {
+    return new Date(Moment.toIsoDateString(dateString));
+  }
+}
+
+const moment = (dateString: any): Moment => {
+  return new Moment(dateString);
+};
 
 class Scheduler {
   private mode: string = SCHEDULE_MODE_DAY;
@@ -58,15 +146,18 @@ class Scheduler {
 
   public constructor(settings: SchedulerSettingsInterface) {
     this.rooms = settings.rooms;
-    this.start = settings.start;
     this.adults = settings.adults;
     this.children = settings.children;
     this.duration = settings.duration;
     this.src = settings.src;
     this.target = settings.target;
     this.setRange(settings.start, settings.end);
-    const renderer = new Renderer(settings.elem, this);
+    const renderer = new Renderer(settings.elem, settings.pickerForm, this);
     renderer.render();
+  }
+
+  public getAjaxSrc(): string {
+    return `${this.src}?date_check_in=${moment(this.start).format()}&date_check_out=${moment(this.end).format()}&adults=${this.adults}&children=${this.children}`;
   }
 
   public getMode(): string {
@@ -74,8 +165,10 @@ class Scheduler {
   }
 
   public setRange(start: Date, end: Date): Scheduler {
-    this.start = start > new Date() ? start : new Date();
-    this.end = end;
+    this.start = moment(start).toBeginOfMonth().getDate() > new Date() ? moment(start).toBeginOfMonth().getDate() : new Date();
+    this.end = moment(end).toEndOfMonth().getDate();
+    this.start.setHours(0, 0, 0, 0);
+    this.end.setHours(0, 0, 0, 0);
     return this;
   }
 
@@ -95,7 +188,7 @@ class Scheduler {
   public load(): Promise<RatesApiResponseInterface> {
     return new Promise<RatesApiResponseInterface>((resolve, reject) => {
       const ajax: XMLHttpRequest = new XMLHttpRequest();
-      ajax.open('GET', this.src, true);
+      ajax.open('GET', this.getAjaxSrc(), true);
       ajax.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
       ajax.setRequestHeader("X-Requested-With", "XMLHttpRequest");
       ajax.withCredentials = true;
@@ -122,24 +215,29 @@ class Scheduler {
 
 class Renderer {
   public container: HTMLElement;
+  public pickerForm: HTMLFormElement;
   public scheduler: Scheduler;
   public panel: HTMLElement;
   public aside: HTMLElement;
   public header: HTMLElement;
+  public action: HTMLButtonElement;
   public width: number = 0;
   public days: Array<string> = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  public months: Array<string> = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'July', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  private timeout;
+  private booking: Booking;
 
-  constructor(container, scheduler: Scheduler) {
+  constructor(container: HTMLElement, pickerForm: HTMLFormElement, scheduler: Scheduler) {
     this.container = container;
     this.scheduler = scheduler;
+    this.pickerForm = pickerForm;
   }
 
   private scrolling(evt): void {
     evt.stopPropagation();
   }
 
-  private cellMouseEnter(evt): void {
-    evt.stopPropagation();
+  private hasEnoughDays(evt): boolean {
     let elem: any = evt.target;
     let count = 1;
 
@@ -148,20 +246,48 @@ class Renderer {
       elem.className += ' hover'
     }
 
-    if (count < this.scheduler.duration) {
+    return !(count < this.scheduler.duration);
+  }
+
+  private cellMouseEnter(evt): void {
+    evt.stopPropagation();
+    if (!this.hasEnoughDays(evt)) {
       evt.target.parentElement.querySelectorAll('.hover').forEach((item: HTMLDivElement) => {
-        item.className = item.className.replace(' hover', '')
+        item.className = item.className.replace(' hover', '');
       });
       evt.target.removeEventListener('click', this.cellClicked.bind(this));
     } else {
       evt.target.className += ' can-select';
+      evt.target.removeEventListener('click', this.cellClicked.bind(this));
       evt.target.addEventListener('click', this.cellClicked.bind(this));
     }
   }
 
   private cellClicked(evt) {
     evt.stopPropagation();
-    window.location.href = this.scheduler.target + '?room=' + evt.target.getAttribute('data-room') + '&start=' + evt.target.getAttribute('data-date') + '&duration=' + this.scheduler.duration + '&adults=' + this.scheduler.adults + '&children=' + this.scheduler.children;
+    evt.preventDefault();
+    //remove all previous selected classes
+    const selected = this.panel.querySelectorAll('.selected');
+    const toSelect = this.panel.querySelectorAll('.hover,.can-select');
+    for (let i = 0; i < selected.length; i++) {
+      selected[i].className = selected[i].className.replace('selected', '');
+    }
+
+    window.setTimeout(() => {
+      for (let i = 0; i < toSelect.length; i++) {
+        toSelect[i].className = toSelect[i].className
+          .replace('hover', 'selected')
+          .replace('can-select', 'selected')
+          .trim();
+      }
+    }, 300);
+
+    this.booking.room = evt.target.getAttribute('data-room');
+    this.booking.start = moment(evt.target.getAttribute('data-date')).getDate();
+    this.booking.duration = this.scheduler.duration;
+    this.booking.adults = this.scheduler.adults;
+    this.booking.children = this.scheduler.children;
+    this.action.disabled = false;
   }
 
   private cellMouseLeave(evt): void {
@@ -204,6 +330,19 @@ class Renderer {
     this.container.appendChild(this.panel);
   }
 
+  private renderAction(): void {
+    const actionPanel = document.createElement('div');
+    actionPanel.className = 'book-now';
+    this.action = document.createElement('button');
+    this.action.textContent = 'Book Now';
+    this.action.type = 'button';
+    actionPanel.appendChild(this.action);
+    this.container.appendChild(actionPanel);
+    this.action.addEventListener('click', () => {
+      window.location.href = this.scheduler.target + '?room=' + this.booking.room + '&start=' + moment(this.booking.start).formatToIso() + '&duration=' + this.booking.duration + '&adults=' + this.booking.adults + '&children=' + this.booking.children;
+    })
+  }
+
   private renderSlots(data: RatesApiResponseInterface = []): void {
     while (this.panel.getElementsByClassName('line').length > 0) {
       this.panel.removeChild(this.panel.querySelector('.line'));
@@ -232,13 +371,19 @@ class Renderer {
   }
 
   private renderHeader(): void {
-    this.header = document.createElement('div');
-    this.header.className = 'header';
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    if (!this.header) {
+      this.header = document.createElement('div');
+      this.header.className = 'header';
+    } else {
+      this.header.innerHTML = '';
+    }
     this.panel.appendChild(this.header);
     this.scheduler.getRange().map((date: Date) => {
       const cell: HTMLElement = document.createElement('div');
-      cell.className = 'cell day-week-' + date.getDay();
-      cell.innerText = this.days[date.getDay()] + ' ' + date.getDate().toString() + '/' + (date.getMonth() + 1).toString();
+      cell.className = 'cell day-week-' + date.getDay() + (date.getTime() == today.getTime() ? ' today' : '');
+      cell.innerHTML = `${date.getDate().toString()} ${this.months[date.getMonth()]}<small>${this.days[date.getDay()]}</small>`;
       this.header.appendChild(cell);
       this.width += cell.offsetWidth;
     });
@@ -252,15 +397,52 @@ class Renderer {
       room.maxChildrenCount < this.scheduler.children;
   }
 
-  public render() {
-    this.addClassName();
-    this.renderAside();
-    this.renderPanel();
+  private bindDatePickers(): void {
+    const startDate: HTMLInputElement = this.pickerForm.querySelector('[name=date_check_in]');
+    const endDate: HTMLInputElement = this.pickerForm.querySelector('[name=date_check_out]');
+    const adults: HTMLInputElement = this.pickerForm.querySelector('[name=adults]');
+    const children: HTMLInputElement = this.pickerForm.querySelector('[name=children]');
+    const onValueChange = e => {
+      // this.scheduler.start = 
+      e.stopPropagation();
+      this.scheduler.children = parseInt(children.value);
+      this.scheduler.adults = parseInt(adults.value);
+      this.scheduler.setRange(moment(startDate.value).getDate(), moment(endDate.value).getDate());
+      window.clearTimeout(this.timeout);
+      this.timeout = window.setTimeout(() => {
+        this.renderDates();
+      }, 300)
+    };
+
+    this.pickerForm.onsubmit = e => {
+      e.stopPropagation();
+      e.preventDefault();
+    };
+
+    startDate.onchange = onValueChange.bind(startDate);
+    endDate.onchange = onValueChange.bind(startDate);
+    adults.onchange = onValueChange.bind(startDate);
+    children.onchange = onValueChange.bind(startDate);
+  }
+
+  public renderDates(): void {
+    this.action.disabled = true;
+    this.booking = new Booking();
     this.renderHeader();
+    this.renderSlots([]);
     this.scheduler
       .load()
       .then((data: RatesApiResponseInterface) => {
         this.renderSlots(data)
       });
+  }
+
+  public render() {
+    this.addClassName();
+    this.renderAside();
+    this.renderPanel();
+    this.renderAction();
+    this.bindDatePickers();
+    this.renderDates();
   }
 }
