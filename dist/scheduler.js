@@ -272,7 +272,7 @@ var Renderer = /** @class */ (function () {
                 cell.className = 'cell day-week-' + date.getDay() + (_this.isNotAvailable(events[today] || new Rate(), room) ? ' taken' : '');
                 cell.setAttribute('data-room', room.id.toString());
                 cell.setAttribute('data-date', date.toISOString().substr(0, 10));
-                if (events[today] && events[today].available == 1) {
+                if (events[today] && events[today].available == 1 && events[today].price) {
                     cell.innerHTML = '&euro;' + events[today].price;
                     cell.addEventListener('mouseenter', _this.cellMouseEnter.bind(_this));
                     cell.addEventListener('mouseleave', _this.cellMouseLeave.bind(_this));

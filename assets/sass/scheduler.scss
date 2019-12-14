@@ -1,21 +1,21 @@
-$color-white:          #fff;
-$color-black:          #171720;
-$color-primary:        #d11c1c;
-$color-secondary:      #cccccc;
-$color-third:          #f9f9f9;
-$cell-border-color:    #f4f4f4;
-$btn-border-color:     darken($color-primary, 10%);
-$btn-bg-color:         $color-primary;
-$btn-color:            $color-white;
-$cell-padding:         10px;
-$cell-width:           85px;
-$cell-height:          65px;
-$cell-line-height:     $cell-height - ($cell-padding * 2);
-$cell-border-width:    solid 1px;
-$cell-border-header:   solid 4px;
-$scheduler-room-width: 200px;
-$font-weight-bold:     800;
-$font-weight-light:    200;
+$color-white:          #fff !default;
+$color-black:          #171720 !default;
+$color-primary:        #d11c1c !default;
+$color-secondary:      #cccccc !default;
+$color-third:          #f9f9f9 !default;
+$cell-border-color:    #f4f4f4 !default;
+$btn-border-color:     darken($color-primary, 10%) !default;
+$btn-bg-color:         $color-primary !default;
+$btn-color:            $color-white !default;
+$cell-padding:         10px !default;
+$cell-width:           85px !default;
+$cell-height:          65px !default;
+$cell-line-height:     $cell-height - ($cell-padding * 2) !default;
+$cell-border-width:    solid 1px !default;
+$cell-border-header:   solid 4px !default;
+$scheduler-room-width: 200px !default;
+$font-weight-bold:     800 !default;
+$font-weight-light:    200 !default;
 
 @mixin text-align($side) {
     text-align: $side;
@@ -38,6 +38,8 @@ $font-weight-light:    200;
             padding:       $cell-padding;
             height:        $cell-height;
             color:         $color-black;
+            white-space:   nowrap;
+            overflow:      hidden;
 
             img {
                 width:        $cell-height - ($cell-padding * 2);
