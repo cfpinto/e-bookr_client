@@ -1,17 +1,21 @@
-$color-white:             #fff;
-$color-black:             #171720;
-$color-grey:              #ccc;
-$color-red:               #D11C1C;
-$color-dark-grey:         #20202d;
-$cell-padding:            10px;
-$cell-width:              85px;
-$cell-height:             65px;
-$cell-line-height:        $cell-height - ($cell-padding * 2);
-$cell-border-width:       solid 1px;
-$cell-border-color-dark:  $color-black;
-$cell-border-color-light: $color-dark-grey;
-$scheduler-room-width:    200px;
-$font-weight-bold:        800;
+$color-white:          #fff;
+$color-black:          #171720;
+$color-primary:        #d11c1c;
+$color-secondary:      #cccccc;
+$color-third:          #f9f9f9;
+$cell-border-color:    #f4f4f4;
+$btn-border-color:     darken($color-primary, 10%);
+$btn-bg-color:         $color-primary;
+$btn-color:            $color-white;
+$cell-padding:         10px;
+$cell-width:           85px;
+$cell-height:          65px;
+$cell-line-height:     $cell-height - ($cell-padding * 2);
+$cell-border-width:    solid 1px;
+$cell-border-header:   solid 4px;
+$scheduler-room-width: 200px;
+$font-weight-bold:     800;
+$font-weight-light:    200;
 
 @mixin text-align($side) {
     text-align: $side;
@@ -19,24 +23,29 @@ $font-weight-bold:        800;
 
 .scheduler {
     overflow:         auto;
-    background-color: $color-dark-grey;
+    background-color: $color-white;
 
     & > aside {
         float:            left;
         width:            $scheduler-room-width;
         padding-top:      $cell-height;
-        background-color: $color-black;
+        background-color: $color-white;
+        font-weight:      $font-weight-bold;
         @include text-align(left);
 
         & > div {
-            border-bottom: $cell-border-width $cell-border-color-light;
+            border-bottom: $cell-border-width $cell-border-color;
             padding:       $cell-padding;
             height:        $cell-height;
-            color:         $color-white;
+            color:         $color-black;
 
             img {
                 width:        $cell-height - ($cell-padding * 2);
                 margin-right: $cell-padding;
+            }
+
+            &:first-child {
+                border-top: $cell-border-width $cell-border-color;
             }
         }
     }
@@ -51,36 +60,55 @@ $font-weight-bold:        800;
             overflow-x:    auto;
             overflow-y:    hidden;
             white-space:   nowrap;
-            border-bottom: $cell-border-width $cell-border-color-dark;
+            border-bottom: $cell-border-width $cell-border-color;
 
             .cell {
-                width:       $cell-width;
-                height:      $cell-height;
-                float:       left;
-                line-height: $cell-line-height;
-                padding:     $cell-padding;
-                cursor:      default;
-                color:       $color-white;
-                transition:  background-color .3s ease-in;
+                width:      $cell-width;
+                height:     $cell-height;
+                float:      left;
+                padding:    $cell-padding;
+                cursor:     default;
+                color:      $color-black;
+                transition: background-color .3s ease-in;
                 @include text-align(center);
 
                 &.day-week-0, &.day-week-6 {
-                    background-color: lighten($color-dark-grey, 5%);
+                    background-color: $color-third;
+                    border-color:     $color-third;
+                }
+
+                &.today {
+                    border-color: $color-primary;
                 }
             }
         }
 
         .header {
+            background-color: $color-white !important;
+            z-index:          auto !important;
+
             .cell {
+                line-height: 1;
                 font-weight: $font-weight-bold;
-                color:       $color-red;
+                color:       $color-black;
+                border-top:  $cell-border-header $color-white;
+
+                small {
+                    color:       $color-black;
+                    font-weight: $font-weight-light;
+                    margin-top:  6px;
+                    display:     block;
+                }
             }
         }
 
         .line {
             .cell {
-                &:hover, &.hover {
-                    background-color: $color-red;
+                line-height: $cell-line-height;
+
+                &.selected {
+                    background-color: $color-primary;
+                    color:            $color-white;
                 }
 
                 &.taken {
@@ -93,6 +121,29 @@ $font-weight-bold:        800;
                 &.can-select {
                     cursor: pointer;
                 }
+
+                &:hover, &.hover {
+                    background-color: lighten($color-primary, 10%);
+                    color:            $color-white;
+                }
+            }
+        }
+    }
+
+    .book-now {
+        padding: 30px;
+
+        button {
+            border:           $cell-border-width $btn-border-color;
+            background-color: $btn-bg-color;
+            color:            $btn-color;
+            text-transform:   uppercase;
+            line-height:      43px;
+            font-size:        20px;
+            padding:          0 30px;
+
+            &:disabled {
+                opacity: 0.5;
             }
         }
     }

@@ -4,6 +4,79 @@ var Rate = /** @class */ (function () {
     }
     return Rate;
 }());
+var Booking = /** @class */ (function () {
+    function Booking() {
+        this.adults = null;
+        this.children = null;
+        this.duration = null;
+        this.room = null;
+        this.start = null;
+    }
+    return Booking;
+}());
+var Moment = /** @class */ (function () {
+    function Moment(date) {
+        if (date instanceof Date) {
+            this.date = new Date(date.getTime());
+        }
+        else {
+            this.date = Moment.toDate(date);
+        }
+    }
+    Moment.prototype.format = function () {
+        var m = this.date.getMonth() + 1;
+        var day = this.date.getDate() > 9 ? this.date.getDate() : '0' + this.date.getDate();
+        var month = m > 9 ? m : '0' + m;
+        return day + "/" + month + "/" + this.date.getFullYear();
+    };
+    Moment.prototype.formatToIso = function () {
+        var m = this.date.getMonth() + 1;
+        var day = this.date.getDate() > 9 ? this.date.getDate() : '0' + this.date.getDate();
+        var month = m > 9 ? m : '0' + m;
+        return this.date.getFullYear() + "-" + month + "-" + day;
+    };
+    Moment.prototype.getDate = function () {
+        return this.date;
+    };
+    Moment.prototype.toBeginOfMonth = function () {
+        var date = new Date(this.date.getTime());
+        date.setDate(1);
+        return new Moment(date);
+    };
+    Moment.prototype.toEndOfMonth = function () {
+        var date = new Date(this.date);
+        var year = date.getFullYear();
+        var isLeap = ((year % 4 == 0) && (year % 100 != 0)) || (year % 400 == 0);
+        if (date.getMonth() == 1 && isLeap) {
+            date.setDate(29);
+        }
+        else if (date.getMonth() == 1 && !isLeap) {
+            date.setDate(28);
+        }
+        else if ([0, 2, 4, 6, 7, 9, 11].indexOf(date.getMonth())) {
+            date.setDate(31);
+        }
+        else {
+            date.setDate(30);
+        }
+        return new Moment(date);
+    };
+    Moment.toIsoDateString = function (dateString) {
+        var test = dateString.match(/^(\d{2})[\/\-](\d{2})[\/\-](\d{4})(.*)/);
+        if (test) {
+            return test[3] + "-" + test[2] + "-" + test[1] + test[4];
+        }
+        //Assume ISO if no match
+        return dateString;
+    };
+    Moment.toDate = function (dateString) {
+        return new Date(Moment.toIsoDateString(dateString));
+    };
+    return Moment;
+}());
+var moment = function (dateString) {
+    return new Moment(dateString);
+};
 var Scheduler = /** @class */ (function () {
     function Scheduler(settings) {
         this.mode = SCHEDULE_MODE_DAY;
@@ -11,22 +84,26 @@ var Scheduler = /** @class */ (function () {
         this.adults = 0;
         this.children = 0;
         this.rooms = settings.rooms;
-        this.start = settings.start;
         this.adults = settings.adults;
         this.children = settings.children;
         this.duration = settings.duration;
         this.src = settings.src;
         this.target = settings.target;
         this.setRange(settings.start, settings.end);
-        var renderer = new Renderer(settings.elem, this);
+        var renderer = new Renderer(settings.elem, settings.pickerForm, this);
         renderer.render();
     }
+    Scheduler.prototype.getAjaxSrc = function () {
+        return this.src + "?date_check_in=" + moment(this.start).format() + "&date_check_out=" + moment(this.end).format() + "&adults=" + this.adults + "&children=" + this.children;
+    };
     Scheduler.prototype.getMode = function () {
         return this.mode;
     };
     Scheduler.prototype.setRange = function (start, end) {
-        this.start = start > new Date() ? start : new Date();
-        this.end = end;
+        this.start = moment(start).toBeginOfMonth().getDate() > new Date() ? moment(start).toBeginOfMonth().getDate() : new Date();
+        this.end = moment(end).toEndOfMonth().getDate();
+        this.start.setHours(0, 0, 0, 0);
+        this.end.setHours(0, 0, 0, 0);
         return this;
     };
     Scheduler.prototype.getRange = function () {
@@ -45,7 +122,7 @@ var Scheduler = /** @class */ (function () {
         var _this = this;
         return new Promise(function (resolve, reject) {
             var ajax = new XMLHttpRequest();
-            ajax.open('GET', _this.src, true);
+            ajax.open('GET', _this.getAjaxSrc(), true);
             ajax.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
             ajax.setRequestHeader("X-Requested-With", "XMLHttpRequest");
             ajax.withCredentials = true;
@@ -71,24 +148,29 @@ var Scheduler = /** @class */ (function () {
     return Scheduler;
 }());
 var Renderer = /** @class */ (function () {
-    function Renderer(container, scheduler) {
+    function Renderer(container, pickerForm, scheduler) {
         this.width = 0;
         this.days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+        this.months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'July', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
         this.container = container;
         this.scheduler = scheduler;
+        this.pickerForm = pickerForm;
     }
     Renderer.prototype.scrolling = function (evt) {
         evt.stopPropagation();
     };
-    Renderer.prototype.cellMouseEnter = function (evt) {
-        evt.stopPropagation();
+    Renderer.prototype.hasEnoughDays = function (evt) {
         var elem = evt.target;
         var count = 1;
         while ((elem = elem.nextSibling) && !/taken/.test(elem.className) && count < this.scheduler.duration) {
             count++;
             elem.className += ' hover';
         }
-        if (count < this.scheduler.duration) {
+        return !(count < this.scheduler.duration);
+    };
+    Renderer.prototype.cellMouseEnter = function (evt) {
+        evt.stopPropagation();
+        if (!this.hasEnoughDays(evt)) {
             evt.target.parentElement.querySelectorAll('.hover').forEach(function (item) {
                 item.className = item.className.replace(' hover', '');
             });
@@ -96,12 +178,33 @@ var Renderer = /** @class */ (function () {
         }
         else {
             evt.target.className += ' can-select';
+            evt.target.removeEventListener('click', this.cellClicked.bind(this));
             evt.target.addEventListener('click', this.cellClicked.bind(this));
         }
     };
     Renderer.prototype.cellClicked = function (evt) {
         evt.stopPropagation();
-        window.location.href = this.scheduler.target + '?room=' + evt.target.getAttribute('data-room') + '&start=' + evt.target.getAttribute('data-date') + '&duration=' + this.scheduler.duration + '&adults=' + this.scheduler.adults + '&children=' + this.scheduler.children;
+        evt.preventDefault();
+        //remove all previous selected classes
+        var selected = this.panel.querySelectorAll('.selected');
+        var toSelect = this.panel.querySelectorAll('.hover,.can-select');
+        for (var i = 0; i < selected.length; i++) {
+            selected[i].className = selected[i].className.replace('selected', '');
+        }
+        window.setTimeout(function () {
+            for (var i = 0; i < toSelect.length; i++) {
+                toSelect[i].className = toSelect[i].className
+                    .replace('hover', 'selected')
+                    .replace('can-select', 'selected')
+                    .trim();
+            }
+        }, 300);
+        this.booking.room = evt.target.getAttribute('data-room');
+        this.booking.start = moment(evt.target.getAttribute('data-date')).getDate();
+        this.booking.duration = this.scheduler.duration;
+        this.booking.adults = this.scheduler.adults;
+        this.booking.children = this.scheduler.children;
+        this.action.disabled = false;
     };
     Renderer.prototype.cellMouseLeave = function (evt) {
         evt.stopPropagation();
@@ -138,6 +241,19 @@ var Renderer = /** @class */ (function () {
         this.panel.addEventListener('scroll', this.scrolling.bind(this));
         this.container.appendChild(this.panel);
     };
+    Renderer.prototype.renderAction = function () {
+        var _this = this;
+        var actionPanel = document.createElement('div');
+        actionPanel.className = 'book-now';
+        this.action = document.createElement('button');
+        this.action.textContent = 'Book Now';
+        this.action.type = 'button';
+        actionPanel.appendChild(this.action);
+        this.container.appendChild(actionPanel);
+        this.action.addEventListener('click', function () {
+            window.location.href = _this.scheduler.target + '?room=' + _this.booking.room + '&start=' + moment(_this.booking.start).formatToIso() + '&duration=' + _this.booking.duration + '&adults=' + _this.booking.adults + '&children=' + _this.booking.children;
+        });
+    };
     Renderer.prototype.renderSlots = function (data) {
         var _this = this;
         if (data === void 0) { data = []; }
@@ -167,13 +283,20 @@ var Renderer = /** @class */ (function () {
     };
     Renderer.prototype.renderHeader = function () {
         var _this = this;
-        this.header = document.createElement('div');
-        this.header.className = 'header';
+        var today = new Date();
+        today.setHours(0, 0, 0, 0);
+        if (!this.header) {
+            this.header = document.createElement('div');
+            this.header.className = 'header';
+        }
+        else {
+            this.header.innerHTML = '';
+        }
         this.panel.appendChild(this.header);
         this.scheduler.getRange().map(function (date) {
             var cell = document.createElement('div');
-            cell.className = 'cell day-week-' + date.getDay();
-            cell.innerText = _this.days[date.getDay()] + ' ' + date.getDate().toString() + '/' + (date.getMonth() + 1).toString();
+            cell.className = 'cell day-week-' + date.getDay() + (date.getTime() == today.getTime() ? ' today' : '');
+            cell.innerHTML = date.getDate().toString() + " " + _this.months[date.getMonth()] + "<small>" + _this.days[date.getDay()] + "</small>";
             _this.header.appendChild(cell);
             _this.width += cell.offsetWidth;
         });
@@ -184,17 +307,51 @@ var Renderer = /** @class */ (function () {
             room.maxAdultCount < this.scheduler.adults ||
             room.maxChildrenCount < this.scheduler.children;
     };
-    Renderer.prototype.render = function () {
+    Renderer.prototype.bindDatePickers = function () {
         var _this = this;
-        this.addClassName();
-        this.renderAside();
-        this.renderPanel();
+        var startDate = this.pickerForm.querySelector('[name=date_check_in]');
+        var endDate = this.pickerForm.querySelector('[name=date_check_out]');
+        var adults = this.pickerForm.querySelector('[name=adults]');
+        var children = this.pickerForm.querySelector('[name=children]');
+        var onValueChange = function (e) {
+            // this.scheduler.start = 
+            e.stopPropagation();
+            _this.scheduler.children = parseInt(children.value);
+            _this.scheduler.adults = parseInt(adults.value);
+            _this.scheduler.setRange(moment(startDate.value).getDate(), moment(endDate.value).getDate());
+            window.clearTimeout(_this.timeout);
+            _this.timeout = window.setTimeout(function () {
+                _this.renderDates();
+            }, 300);
+        };
+        this.pickerForm.onsubmit = function (e) {
+            e.stopPropagation();
+            e.preventDefault();
+        };
+        startDate.onchange = onValueChange.bind(startDate);
+        endDate.onchange = onValueChange.bind(startDate);
+        adults.onchange = onValueChange.bind(startDate);
+        children.onchange = onValueChange.bind(startDate);
+    };
+    Renderer.prototype.renderDates = function () {
+        var _this = this;
+        this.action.disabled = true;
+        this.booking = new Booking();
         this.renderHeader();
+        this.renderSlots([]);
         this.scheduler
             .load()
             .then(function (data) {
             _this.renderSlots(data);
         });
+    };
+    Renderer.prototype.render = function () {
+        this.addClassName();
+        this.renderAside();
+        this.renderPanel();
+        this.renderAction();
+        this.bindDatePickers();
+        this.renderDates();
     };
     return Renderer;
 }());
