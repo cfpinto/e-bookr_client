@@ -8,9 +8,7 @@ use Ebookr\Client\Http\Requests\StoreBooking;
 use Ebookr\Client\Models\Booking;
 use Ebookr\Client\Models\Room;
 use Ebookr\Client\Models\User;
-use GuzzleHttp\Client;
 use Illuminate\Http\Request;
-use TCG\Voyager\Models\Role;
 
 class BookingController extends Controller
 {
@@ -33,7 +31,6 @@ class BookingController extends Controller
         $adults = $request->query('adults', 1);
         $children = $request->query('children', 0);
         $location = location();
-        $rooms = $request->query('rooms');
         
         if (count($request->query('rooms', []))) {
             $rooms = $location->rooms()->whereIn('id', $request->query('rooms'));
