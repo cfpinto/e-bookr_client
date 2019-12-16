@@ -61,6 +61,9 @@ var Moment = /** @class */ (function () {
         }
         return new Moment(date);
     };
+    Moment.prototype.diff = function (date) {
+        return Math.ceil(Math.abs(this.date.getTime() - date.getDate().getTime()) / (1000 * 3600 * 24));
+    };
     Moment.toIsoDateString = function (dateString) {
         var test = dateString.match(/^(\d{2})[\/\-](\d{2})[\/\-](\d{4})(.*)/);
         if (test) {
@@ -314,11 +317,13 @@ var Renderer = /** @class */ (function () {
         var adults = this.pickerForm.querySelector('[name=adults]');
         var children = this.pickerForm.querySelector('[name=children]');
         var onValueChange = function (e) {
-            // this.scheduler.start = 
             e.stopPropagation();
+            var start = moment(startDate.value);
+            var end = moment(endDate.value);
             _this.scheduler.children = parseInt(children.value);
             _this.scheduler.adults = parseInt(adults.value);
-            _this.scheduler.setRange(moment(startDate.value).getDate(), moment(endDate.value).getDate());
+            _this.scheduler.duration = end.diff(start);
+            _this.scheduler.setRange(start.getDate(), end.getDate());
             window.clearTimeout(_this.timeout);
             _this.timeout = window.setTimeout(function () {
                 _this.renderDates();
