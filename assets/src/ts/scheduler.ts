@@ -113,6 +113,11 @@ class Moment {
 
     return new Moment(date);
   }
+  
+  public diff(date:Moment):number
+  {
+    return Math.ceil(Math.abs(this.date.getTime() - date.getDate().getTime())/ (1000 * 3600 * 24))
+  }
 
   static toIsoDateString(dateString: string): string {
     let test: RegExpMatchArray = dateString.match(/^(\d{2})[\/\-](\d{2})[\/\-](\d{4})(.*)/);
@@ -403,11 +408,13 @@ class Renderer {
     const adults: HTMLInputElement = this.pickerForm.querySelector('[name=adults]');
     const children: HTMLInputElement = this.pickerForm.querySelector('[name=children]');
     const onValueChange = e => {
-      // this.scheduler.start = 
       e.stopPropagation();
+      const start = moment(startDate.value);
+      const end = moment(endDate.value);
       this.scheduler.children = parseInt(children.value);
       this.scheduler.adults = parseInt(adults.value);
-      this.scheduler.setRange(moment(startDate.value).getDate(), moment(endDate.value).getDate());
+      this.scheduler.duration = end.diff(start);
+      this.scheduler.setRange(start.getDate(), end.getDate());
       window.clearTimeout(this.timeout);
       this.timeout = window.setTimeout(() => {
         this.renderDates();
