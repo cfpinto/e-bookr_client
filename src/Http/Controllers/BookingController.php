@@ -28,16 +28,17 @@ class BookingController extends Controller
             $end = $start->copy()->addDay();
         }
 
+        $duration = $end->diffInDays($start);
         $adults = $request->query('adults', 1);
         $children = $request->query('children', 0);
         $location = location();
-        
+
         if (count($request->query('rooms', []))) {
             $rooms = $location->rooms()->whereIn('id', $request->query('rooms'));
         } else {
             $rooms = $location->rooms()->where('api_source', env('EBOOKR_AGGREGATOR'))->whereNotNull('api_id');
         }
-        
+
         if ($request->isXmlHttpRequest() || $request->query('ajax')) {
             try {
                 $smoobu = new Smoobu();
@@ -133,10 +134,10 @@ class BookingController extends Controller
         if (!$request->hasValidSignature()) {
             return abort(404);
         }
-        
+
         $client = new Smoobu();
         $smoobuBooking = $client->retrieve($booking->api_id, $booking->bookable->api_id, $booking->start, $booking->end);
-        
+
         return view('e-bookr::bookings.show', compact('booking', 'smoobuBooking'));
     }
 }
