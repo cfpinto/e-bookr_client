@@ -22,13 +22,6 @@ class Locale
             $session->put(self::SESSION_KEY, $request->getPreferredLanguage(config('voyager.multilingual.locales')));
         }
 
-        if ($request->has('lang')) {
-            $lang = $request->get('lang');
-            if (in_array($lang, config('voyager.multilingual.locales'))) {
-                $session->put(self::SESSION_KEY, $lang);
-            }
-        }
-
         app()->setLocale($session->get(self::SESSION_KEY));
         Carbon::setLocale(app()->getLocale());
 
