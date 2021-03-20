@@ -59,8 +59,10 @@ use TCG\Voyager\Traits\Translatable;
  */
 class Page extends Model
 {
-    
+
     use Translatable, Resizable, SoftDeletes;
+
+    protected $translatable = ['title', 'excerpt', 'body'];
 
     public function page()
     {
@@ -71,7 +73,7 @@ class Page extends Model
     {
         return $this->hasMany(Page::class);
     }
-    
+
     public function getImageUrlAttribute()
     {
         return \Storage::disk(config('voyager.storage.disk'))->url($this->image);

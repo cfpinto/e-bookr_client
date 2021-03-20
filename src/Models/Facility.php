@@ -37,4 +37,6 @@ use TCG\Voyager\Traits\Translatable;
 class Facility extends Model
 {
     use Translatable, SoftDeletes;
+
+    protected $translatable = ['name', 'description'];
 }

@@ -37,4 +37,6 @@ use TCG\Voyager\Traits\Translatable;
 class Amenity extends Model
 {
     use Translatable, SoftDeletes;
+
+    protected $translatable = ['name', 'description'];
 }
