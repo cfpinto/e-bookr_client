@@ -1,0 +1,15 @@
+# Copy the contents of this output into a supervisor configuration file
+# eg. /etc/supervisor/conf.d/%(queue_name).conf
+
+[program:queue/%(queue_name)]
+process_name=%(program_name)s_%(process_num)02d
+command=php %(artisan_path) queue:work --queue=%(queue_name) --sleep=3 --tries=3 --max-time=3600
+autostart=true
+autorestart=true
+stopasgroup=true
+killasgroup=true
+user=forge
+numprocs=%(number_processes)
+redirect_stderr=true
+stdout_logfile=%(log_file_path)
+stopwaitsecs=3600

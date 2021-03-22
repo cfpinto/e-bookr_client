@@ -9,6 +9,7 @@
 namespace Ebookr\Client\Providers;
 
 use Ebookr\Client\Console\FindTranslationCommand;
+use Ebookr\Client\Console\SupervisorConf;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Illuminate\Support\ServiceProvider;
@@ -52,7 +53,8 @@ class ClientProvider extends ServiceProvider
         if ($this->app->runningInConsole()) {
             $this->commands(
                 [
-                    FindTranslationCommand::class
+                    FindTranslationCommand::class,
+                    SupervisorConf::class,
                 ]
             );
         }

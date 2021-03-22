@@ -11,6 +11,7 @@
     "require": {
         "php": ">=7.1.0",
         "ext-json": "*",
+        "ext-posix": "*",
         "laravel/framework": ">=5.5",
         "tcg/voyager": "^1.1",
         "barryvdh/laravel-translation-manager": ">=0.5",
