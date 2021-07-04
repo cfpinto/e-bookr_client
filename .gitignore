@@ -1,5 +1,16 @@
+# General
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Icon must end with two \r
+Icon
+
+# Thumbnails
+._*
+
 vendor
 composer.lock
 node_modules
 composer.phar
-
+.idea
