@@ -9,6 +9,7 @@ use Ebookr\Client\Models\Booking;
 use Ebookr\Client\Models\Room;
 use Ebookr\Client\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class BookingController extends Controller
 {
@@ -97,7 +98,7 @@ class BookingController extends Controller
                     'name'     => $name,
                     'email'    => $email,
                     'avatar'   => 'users/default.png',
-                    'password' => \Hash::make(str_random()),
+                    'password' => \Hash::make(Str::random()),
                     'settings' => [
                         "locale" => "en",
                     ],

@@ -12,7 +12,7 @@
         "php": ">=7.1.0",
         "ext-json": "*",
         "ext-posix": "*",
-        "laravel/framework": ">=5.5",
+        "laravel/framework": "^6.0",
         "tcg/voyager": "^1.1",
         "barryvdh/laravel-translation-manager": ">=0.5",
         "laracasts/flash": "^3.0",
